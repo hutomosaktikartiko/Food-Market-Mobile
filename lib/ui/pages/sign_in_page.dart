@@ -71,7 +71,46 @@ class _SignInPageState extends State<SignInPage> {
             child: isLoading
                 ? loadingIndicator
                 : RaisedButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      setState(() {
+                        isLoading = true;
+                      });
+
+                      await context.bloc<UserCubit>().signIn(
+                          emailController.text, passwordController.text);
+                      UserState state = context.bloc<UserCubit>().state;
+
+                      if (state is UserLoaded) {
+                        context.bloc<FoodCubit>().getFoods();
+                        context.bloc<TransactionCubit>().getTransactions();
+                        Get.to(MainPage());
+                      } else {
+                        Get.snackbar(
+                          "",
+                          "",
+                          backgroundColor: "D9435E".toColor(),
+                          icon: Icon(
+                            MdiIcons.closeCircleOutline,
+                            color: Colors.white,
+                          ),
+                          titleText: Text(
+                            "Sign In Failed",
+                            style: GoogleFonts.poppins(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600),
+                          ),
+                          messageText: Text(
+                            (state as UserLoadingFailed).message,
+                            style: GoogleFonts.poppins(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600),
+                          ),
+                        );
+                        setState(() {
+                          isLoading = false;
+                        });
+                      }
+                    },
                     elevation: 0,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8)),
