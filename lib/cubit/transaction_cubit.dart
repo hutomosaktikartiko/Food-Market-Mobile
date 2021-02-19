@@ -23,7 +23,7 @@ class TransactionCubit extends Cubit<TransactionState> {
     ApiReturnValue<Transaction> result =
         await TransactionServices.submitTransaction(transaction);
 
-    if (result != null) {
+    if (result.value != null) {
       emit(TransactionLoaded(
           (state as TransactionLoaded).transactions + [result.value]));
 
