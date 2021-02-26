@@ -39,8 +39,45 @@ class UserServices {
     User.token = data['data']['access_token'];
     User value = data['data']['user'];
 
-    // todo : Upload PP
+    if (pictureFile != null) {
+      ApiReturnValue<String> result = await uploadProfilePicture(pictureFile);
+      if (result.value != null) {
+        value = value.copywith(
+            picturePath:
+                "http://foodmarket-backend.buildwithangga.id/storage/" +
+                    result.value);
+      }
+    }
 
     return ApiReturnValue(value: value);
+  }
+
+  static Future<ApiReturnValue<String>> uploadProfilePicture(File pictureFile,
+      {http.MultipartRequest request}) async {
+    String url = baseURL + 'user/photo';
+    var uri = Uri.parse(url);
+
+    if (request == null) {
+      request = http.MultipartRequest("POST", uri)
+        ..headers["Content-Type"] = "application/json"
+        ..headers["Authorization"] = "Bearer ${User.token}";
+    }
+
+    var multipartFile =
+        await http.MultipartFile.fromPath('file', pictureFile.path);
+    request.files.add(multipartFile);
+
+    var response = await request.send();
+
+    if (response.statusCode == 200) {
+      String responseBody = await response.stream.bytesToString();
+      var data = jsonDecode(responseBody);
+
+      String imagePath = data['data'][0];
+
+      return ApiReturnValue(value: imagePath);
+    } else {
+      return ApiReturnValue(message: 'Uploading Profile Picture Failed');
+    }
   }
 }

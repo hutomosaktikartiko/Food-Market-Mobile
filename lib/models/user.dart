@@ -21,7 +21,7 @@ class User extends Equatable {
       this.city,
       this.picturePath});
 
-  User copywith(
+  User copywith({
     int id,
     String name,
     String email,
@@ -30,7 +30,7 @@ class User extends Equatable {
     String phoneNumber,
     String city,
     String picturePath,
-  ) =>
+  }) =>
       User(
           id: id ?? this.id,
           name: name ?? this.name,
