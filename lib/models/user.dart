@@ -21,7 +21,7 @@ class User extends Equatable {
       this.city,
       this.picturePath});
 
-  User copywith({
+  User copyWith({
     int id,
     String name,
     String email,

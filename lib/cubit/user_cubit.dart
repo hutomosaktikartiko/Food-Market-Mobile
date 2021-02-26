@@ -30,4 +30,15 @@ class UserCubit extends Cubit<UserState> {
       emit(UserLoadingFailed(result.message));
     }
   }
+
+  Future<void> uploadProfilePicture(File pictureFile) async {
+    ApiReturnValue<String> result =
+        await UserServices.uploadProfilePicture(pictureFile);
+
+    if (result.value != null) {
+      emit(UserLoaded((state as UserLoaded).user.copyWith(
+          picturePath: "http://foodmarket-backend.buildwithangga.id/storage/" +
+              result.value)));
+    }
+  }
 }
