@@ -119,6 +119,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 border: Border.all(color: Colors.black)),
             child: TextField(
               controller: passwordController,
+              obscureText: true,
               decoration: InputDecoration(
                   border: InputBorder.none,
                   hintStyle: greyFontStyle,
@@ -132,7 +133,13 @@ class _SignUpPageState extends State<SignUpPage> {
             padding: EdgeInsets.symmetric(horizontal: defaultMargin),
             child: RaisedButton(
               onPressed: () {
-                Get.to(AddressPage());
+                Get.to(AddressPage(
+                    User(
+                      name: nameController.text,
+                      email: emailController.text,
+                    ),
+                    passwordController.text,
+                    pictureFile));
               },
               elevation: 0,
               shape: RoundedRectangleBorder(
